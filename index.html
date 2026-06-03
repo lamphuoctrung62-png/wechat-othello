@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#0f5132" />
+    <title>黑白棋小局</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="top-bar" aria-label="游戏状态">
+        <div>
+          <p class="eyebrow">本地双人原型</p>
+          <h1>黑白棋小局</h1>
+        </div>
+        <button id="shareButton" class="icon-button" type="button" aria-label="复制邀请链接" title="复制邀请链接">
+          <span aria-hidden="true">↗</span>
+        </button>
+      </section>
+
+      <section class="score-strip" aria-label="比分">
+        <article class="score-card is-black" id="blackScoreCard">
+          <span class="disc mini black"></span>
+          <div>
+            <span class="score-label">黑棋</span>
+            <strong id="blackScore">2</strong>
+          </div>
+        </article>
+        <article class="score-card is-white" id="whiteScoreCard">
+          <span class="disc mini white"></span>
+          <div>
+            <span class="score-label">白棋</span>
+            <strong id="whiteScore">2</strong>
+          </div>
+        </article>
+      </section>
+
+      <section class="status-panel" aria-live="polite">
+        <div class="turn-pill" id="turnPill">
+          <span class="disc tiny black" id="turnDisc"></span>
+          <span id="turnText">黑棋先手</span>
+        </div>
+        <p id="gameMessage">绿色提示点是当前可落子位置。</p>
+      </section>
+
+      <section class="board-wrap" aria-label="黑白棋棋盘">
+        <div id="board" class="board" role="grid" aria-label="8乘8黑白棋棋盘"></div>
+      </section>
+
+      <section class="controls" aria-label="游戏控制">
+        <button id="newGameButton" class="primary-button" type="button">
+          <span aria-hidden="true">↺</span>
+          新开一局
+        </button>
+        <button id="undoButton" class="secondary-button" type="button" disabled>
+          <span aria-hidden="true">↶</span>
+          悔棋
+        </button>
+        <button id="passButton" class="secondary-button" type="button" disabled>
+          <span aria-hidden="true">⏭</span>
+          跳过
+        </button>
+      </section>
+
+      <section class="room-card" aria-label="房间链接预览">
+        <div>
+          <span class="score-label">未来联机链接</span>
+          <p id="roomLink">本地原型暂用同屏对弈；下一步接入实时房间。</p>
+        </div>
+      </section>
+    </main>
+
+    <script src="./vendor/gsap.min.js"></script>
+    <script src="./app.js"></script>
+  </body>
+</html>
