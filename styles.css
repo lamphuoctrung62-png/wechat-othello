@@ -135,7 +135,7 @@ h1 {
     url("./assets/black.jpg"),
     radial-gradient(circle at 50% 62%, #303630 0%, #151916 48%, #050605 100%);
   background-position: center;
-  background-size: cover;
+  background-size: 112% 112%, cover, cover, cover;
   box-shadow:
     0 5px 10px rgba(0, 0, 0, 0.24),
     inset 0 2px 3px rgba(255, 255, 255, 0.18),
@@ -150,7 +150,7 @@ h1 {
     url("./assets/white.jpg"),
     radial-gradient(circle at 52% 62%, #fffdf7 0%, #eee7d8 52%, #c9bda6 100%);
   background-position: center;
-  background-size: cover;
+  background-size: 112% 112%, cover, cover, cover;
   box-shadow:
     0 5px 10px rgba(58, 45, 25, 0.18),
     inset 0 2px 3px rgba(255, 255, 255, 0.95),
@@ -224,6 +224,7 @@ h1 {
   position: relative;
   display: grid;
   place-items: center;
+  aspect-ratio: 1 / 1;
   min-width: 0;
   min-height: 0;
   background:
@@ -243,8 +244,9 @@ h1 {
 
 .disc-piece {
   position: relative;
-  width: 74%;
-  height: 74%;
+  width: min(70%, 64px);
+  height: auto;
+  aspect-ratio: 1 / 1;
   border-radius: 50%;
   display: block;
   overflow: hidden;
@@ -259,12 +261,12 @@ h1 {
     url("./assets/black.jpg"),
     radial-gradient(circle at 50% 62%, #353b35 0%, #171b18 48%, #050605 100%);
   background-position: center;
-  background-size: cover;
+  background-size: 112% 112%, cover, cover, cover;
   box-shadow:
-    0 3px 0 rgba(3, 4, 3, 0.9),
-    0 9px 13px rgba(0, 0, 0, 0.34),
+    0 2px 0 rgba(3, 4, 3, 0.82),
+    0 7px 11px rgba(0, 0, 0, 0.32),
     inset 0 3px 5px rgba(255, 255, 255, 0.16),
-    inset 0 -9px 14px rgba(0, 0, 0, 0.6),
+    inset 0 -7px 12px rgba(0, 0, 0, 0.58),
     inset 0 0 0 2px rgba(255, 255, 255, 0.05);
 }
 
@@ -275,12 +277,12 @@ h1 {
     url("./assets/white.jpg"),
     radial-gradient(circle at 52% 62%, #fffdf8 0%, #eee7d9 52%, #c6b89e 100%);
   background-position: center;
-  background-size: cover;
+  background-size: 112% 112%, cover, cover, cover;
   box-shadow:
-    0 3px 0 rgba(143, 124, 91, 0.78),
-    0 9px 13px rgba(35, 28, 17, 0.24),
+    0 2px 0 rgba(143, 124, 91, 0.72),
+    0 7px 11px rgba(35, 28, 17, 0.22),
     inset 0 3px 5px rgba(255, 255, 255, 0.96),
-    inset 0 -9px 15px rgba(116, 94, 60, 0.32),
+    inset 0 -7px 12px rgba(116, 94, 60, 0.3),
     inset 0 0 0 2px rgba(94, 72, 40, 0.08);
 }
 

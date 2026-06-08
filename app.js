@@ -43,6 +43,7 @@ let myPlayer = null;
 let isRoomMode = Boolean(roomId);
 let isPolling = false;
 let undoRequest = null;
+let isDisconnected = false;
 
 function createInitialBoard() {
   const nextBoard = Array.from({ length: SIZE }, () => Array(SIZE).fill(EMPTY));
@@ -146,7 +147,7 @@ function saveHistory() {
 }
 
 function canAct() {
-  return !isRoomMode || (myPlayer && myPlayer === currentPlayer);
+  return !isRoomMode || (!isDisconnected && myPlayer && myPlayer === currentPlayer);
 }
 
 function renderBoard() {
@@ -197,9 +198,10 @@ function renderStatus(message) {
   blackScoreCard.classList.toggle("is-active", !gameOver && currentPlayer === BLACK);
   whiteScoreCard.classList.toggle("is-active", !gameOver && currentPlayer === WHITE);
   passButton.disabled = gameOver || legalMoves.size > 0 || !myTurn;
-  undoButton.disabled = history.length === 0 || (isRoomMode && (!myPlayer || undoRequestedByMe));
+  undoButton.disabled =
+    isDisconnected || history.length === 0 || (isRoomMode && (!myPlayer || undoRequestedByMe));
   undoTextEl.textContent = undoRequestedByOther ? "同意悔棋" : undoRequestedByMe ? "等待同意" : "悔棋";
-  newGameButton.disabled = isRoomMode && !myPlayer;
+  newGameButton.disabled = isDisconnected || (isRoomMode && !myPlayer);
   gameMessageEl.textContent = message;
 }
 
@@ -327,6 +329,7 @@ function applyRoomState(state, animate = false) {
   history = Array.from({ length: state.historyLength }, () => null);
   changedCells = animate ? state.changedCells || [] : [];
   undoRequest = state.undoRequest;
+  isDisconnected = false;
 
   const roleText = myPlayer ? `你执${playerName(myPlayer)}。` : "本局已有两位玩家，你正在观战。";
   const waitingText = state.players.whiteJoined ? "" : " 等白棋加入。";
@@ -379,9 +382,9 @@ async function joinRoom() {
     applyRoomState(state);
     startPolling();
   } catch (error) {
-    isRoomMode = false;
-    roomLinkEl.textContent = "房间不存在或已过期，可以重新创建链接。";
-    refresh(error.message);
+    isDisconnected = true;
+    roomLinkEl.textContent = "房间暂时无法连接。请回到首页重新创建房间链接。";
+    renderSyncedState(error.message);
   }
 }
 
@@ -399,8 +402,12 @@ function startPolling() {
       const state = await response.json();
       if (response.ok && state.version !== roomVersion) {
         applyRoomState(state, true);
+      } else if (!response.ok) {
+        isDisconnected = true;
+        renderSyncedState(state.error || "房间同步失败，请重新创建房间。");
       }
     } catch {
+      isDisconnected = true;
       gameMessageEl.textContent = "正在重连房间...";
     } finally {
       window.setTimeout(poll, 900);
@@ -432,6 +439,7 @@ function animateChangedCells() {
         duration: 0.46,
         delay: index * 0.025,
         ease: "back.out(1.7)",
+        clearProps: "transform",
       },
     );
   }
