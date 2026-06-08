@@ -22,6 +22,7 @@ const gameMessageEl = document.querySelector("#gameMessage");
 const passButton = document.querySelector("#passButton");
 const newGameButton = document.querySelector("#newGameButton");
 const undoButton = document.querySelector("#undoButton");
+const undoTextEl = document.querySelector("#undoText");
 const shareButton = document.querySelector("#shareButton");
 const blackScoreCard = document.querySelector("#blackScoreCard");
 const whiteScoreCard = document.querySelector("#whiteScoreCard");
@@ -41,6 +42,7 @@ let roomVersion = 0;
 let myPlayer = null;
 let isRoomMode = Boolean(roomId);
 let isPolling = false;
+let undoRequest = null;
 
 function createInitialBoard() {
   const nextBoard = Array.from({ length: SIZE }, () => Array(SIZE).fill(EMPTY));
@@ -186,6 +188,8 @@ function renderBoard() {
 function renderStatus(message) {
   const counts = countDiscs();
   const myTurn = canAct();
+  const undoRequestedByMe = isRoomMode && undoRequest?.requestedBy === myPlayer;
+  const undoRequestedByOther = isRoomMode && undoRequest && undoRequest.requestedBy !== myPlayer;
   blackScoreEl.textContent = counts.black;
   whiteScoreEl.textContent = counts.white;
   turnDiscEl.className = `disc tiny ${currentPlayer === BLACK ? "black" : "white"}`;
@@ -193,7 +197,8 @@ function renderStatus(message) {
   blackScoreCard.classList.toggle("is-active", !gameOver && currentPlayer === BLACK);
   whiteScoreCard.classList.toggle("is-active", !gameOver && currentPlayer === WHITE);
   passButton.disabled = gameOver || legalMoves.size > 0 || !myTurn;
-  undoButton.disabled = history.length === 0 || (isRoomMode && !myPlayer);
+  undoButton.disabled = history.length === 0 || (isRoomMode && (!myPlayer || undoRequestedByMe));
+  undoTextEl.textContent = undoRequestedByOther ? "同意悔棋" : undoRequestedByMe ? "等待同意" : "悔棋";
   newGameButton.disabled = isRoomMode && !myPlayer;
   gameMessageEl.textContent = message;
 }
@@ -321,6 +326,7 @@ function applyRoomState(state, animate = false) {
   myPlayer = state.player;
   history = Array.from({ length: state.historyLength }, () => null);
   changedCells = animate ? state.changedCells || [] : [];
+  undoRequest = state.undoRequest;
 
   const roleText = myPlayer ? `你执${playerName(myPlayer)}。` : "本局已有两位玩家，你正在观战。";
   const waitingText = state.players.whiteJoined ? "" : " 等白棋加入。";

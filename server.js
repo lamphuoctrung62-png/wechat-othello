@@ -110,6 +110,7 @@ function createRoom(hostClientId) {
     message: "房间已创建，黑棋先手。",
     changedCells: [],
     history: [],
+    undoRequest: null,
     players: { black: hostClientId, white: null },
     updatedAt: Date.now(),
   };
@@ -174,6 +175,7 @@ function serializeRoom(room, clientId) {
     message: room.message,
     changedCells: room.changedCells,
     historyLength: room.history.length,
+    undoRequest: room.undoRequest,
     player: playerFor(room, clientId),
     players: {
       blackJoined: Boolean(room.players.black),
@@ -266,6 +268,7 @@ async function handleApi(req, res, url) {
     if (flips.length === 0) return sendError(res, 400, "这里不能落子");
 
     saveHistory(room);
+    room.undoRequest = null;
     room.board[payload.row][payload.col] = player;
     for (const [row, col] of flips) room.board[row][col] = player;
     room.lastMove = { row: payload.row, col: payload.col };
@@ -284,6 +287,7 @@ async function handleApi(req, res, url) {
 
     room.currentPlayer = opponentOf(player);
     room.changedCells = [];
+    room.undoRequest = null;
     room.message = `${playerName(player)}跳过，轮到${playerName(room.currentPlayer)}。`;
     finalizeIfNeeded(room);
     touch(room);
@@ -291,15 +295,36 @@ async function handleApi(req, res, url) {
   }
 
   if (req.method === "POST" && action === "undo") {
+    if (room.history.length === 0) return sendError(res, 400, "没有可悔棋步骤");
+
+    const otherPlayer = opponentOf(player);
+    const otherClientId = otherPlayer === BLACK ? room.players.black : room.players.white;
+    if (!otherClientId) return sendError(res, 400, "需要对方加入后才能请求悔棋");
+
+    if (!room.undoRequest) {
+      room.undoRequest = {
+        requestedBy: player,
+        requestedByClientId: clientId,
+      };
+      room.changedCells = [];
+      room.message = `${playerName(player)}请求悔棋，等待${playerName(otherPlayer)}同意。`;
+      touch(room);
+      return sendJson(res, 200, serializeRoom(room, clientId));
+    }
+
+    if (room.undoRequest.requestedByClientId === clientId) {
+      return sendError(res, 409, "已发送悔棋请求，等待对方同意");
+    }
+
     const previous = room.history.pop();
-    if (!previous) return sendError(res, 400, "没有可悔棋步骤");
 
     room.board = cloneBoard(previous.board);
     room.currentPlayer = previous.currentPlayer;
     room.lastMove = previous.lastMove;
     room.gameOver = previous.gameOver;
-    room.message = "已悔棋，回到上一步。";
+    room.message = `${playerName(player)}已同意悔棋，回到上一步。`;
     room.changedCells = [];
+    room.undoRequest = null;
     touch(room);
     return sendJson(res, 200, serializeRoom(room, clientId));
   }
@@ -312,6 +337,7 @@ async function handleApi(req, res, url) {
     room.message = "新的一局开始，黑棋先手。";
     room.changedCells = [];
     room.history = [];
+    room.undoRequest = null;
     touch(room);
     return sendJson(res, 200, serializeRoom(room, clientId));
   }

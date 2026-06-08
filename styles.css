@@ -121,23 +121,53 @@ h1 {
 }
 
 .disc {
+  position: relative;
   display: inline-block;
   border-radius: 50%;
   flex: 0 0 auto;
+  overflow: hidden;
 }
 
 .disc.black {
   background:
-    radial-gradient(circle at 32% 28%, #70756c, transparent 18%),
-    linear-gradient(145deg, #0b0d0c, #252b27);
-  box-shadow: inset -5px -5px 12px rgba(0, 0, 0, 0.42), inset 4px 4px 10px rgba(255, 255, 255, 0.08);
+    radial-gradient(circle at 34% 24%, rgba(255, 255, 255, 0.26), transparent 14%),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.08), rgba(0, 0, 0, 0.24)),
+    url("./assets/black.jpg"),
+    radial-gradient(circle at 50% 62%, #303630 0%, #151916 48%, #050605 100%);
+  background-position: center;
+  background-size: cover;
+  box-shadow:
+    0 5px 10px rgba(0, 0, 0, 0.24),
+    inset 0 2px 3px rgba(255, 255, 255, 0.18),
+    inset 0 -7px 11px rgba(0, 0, 0, 0.56),
+    inset 0 0 0 2px rgba(255, 255, 255, 0.05);
 }
 
 .disc.white {
   background:
-    radial-gradient(circle at 32% 26%, #ffffff, transparent 22%),
-    linear-gradient(145deg, #fffaf0, #d8d0bd);
-  box-shadow: inset -5px -5px 12px rgba(120, 104, 74, 0.24), inset 4px 4px 10px rgba(255, 255, 255, 0.8);
+    radial-gradient(circle at 33% 24%, #ffffff 0%, rgba(255, 255, 255, 0.7) 18%, transparent 32%),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.18), rgba(94, 72, 40, 0.12)),
+    url("./assets/white.jpg"),
+    radial-gradient(circle at 52% 62%, #fffdf7 0%, #eee7d8 52%, #c9bda6 100%);
+  background-position: center;
+  background-size: cover;
+  box-shadow:
+    0 5px 10px rgba(58, 45, 25, 0.18),
+    inset 0 2px 3px rgba(255, 255, 255, 0.95),
+    inset 0 -7px 12px rgba(116, 94, 60, 0.28),
+    inset 0 0 0 2px rgba(97, 78, 49, 0.08);
+}
+
+.disc::after,
+.disc-piece::after {
+  content: "";
+  position: absolute;
+  inset: 5%;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.34), transparent 16%),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.16), transparent 42%);
+  pointer-events: none;
 }
 
 .disc.mini {
@@ -212,26 +242,46 @@ h1 {
 }
 
 .disc-piece {
+  position: relative;
   width: 74%;
   height: 74%;
   border-radius: 50%;
   display: block;
+  overflow: hidden;
   transform-style: preserve-3d;
   will-change: transform;
 }
 
 .disc-piece.black {
   background:
-    radial-gradient(circle at 32% 28%, #70756c, transparent 18%),
-    linear-gradient(145deg, #0b0d0c, #252b27);
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.28), inset -7px -7px 13px rgba(0, 0, 0, 0.38);
+    radial-gradient(circle at 33% 23%, rgba(255, 255, 255, 0.25), transparent 13%),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.07), rgba(0, 0, 0, 0.28)),
+    url("./assets/black.jpg"),
+    radial-gradient(circle at 50% 62%, #353b35 0%, #171b18 48%, #050605 100%);
+  background-position: center;
+  background-size: cover;
+  box-shadow:
+    0 3px 0 rgba(3, 4, 3, 0.9),
+    0 9px 13px rgba(0, 0, 0, 0.34),
+    inset 0 3px 5px rgba(255, 255, 255, 0.16),
+    inset 0 -9px 14px rgba(0, 0, 0, 0.6),
+    inset 0 0 0 2px rgba(255, 255, 255, 0.05);
 }
 
 .disc-piece.white {
   background:
-    radial-gradient(circle at 32% 26%, #ffffff, transparent 22%),
-    linear-gradient(145deg, #fffaf0, #d8d0bd);
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.18), inset -6px -6px 13px rgba(129, 112, 84, 0.24);
+    radial-gradient(circle at 33% 23%, #ffffff 0%, rgba(255, 255, 255, 0.72) 18%, transparent 32%),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.16), rgba(94, 72, 40, 0.12)),
+    url("./assets/white.jpg"),
+    radial-gradient(circle at 52% 62%, #fffdf8 0%, #eee7d9 52%, #c6b89e 100%);
+  background-position: center;
+  background-size: cover;
+  box-shadow:
+    0 3px 0 rgba(143, 124, 91, 0.78),
+    0 9px 13px rgba(35, 28, 17, 0.24),
+    inset 0 3px 5px rgba(255, 255, 255, 0.96),
+    inset 0 -9px 15px rgba(116, 94, 60, 0.32),
+    inset 0 0 0 2px rgba(94, 72, 40, 0.08);
 }
 
 .cell.legal {
