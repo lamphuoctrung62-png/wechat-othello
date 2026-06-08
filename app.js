@@ -297,7 +297,7 @@ function endGame() {
   const counts = countDiscs();
   let message = `终局：黑棋${counts.black}，白棋${counts.white}。`;
   if (counts.black > counts.white) message += "黑棋获胜。";
-  if (counts.white > counts.black) message += "白棋获胜。";
+  if (counts.white > counts.black) message += "白棋获胜。恭喜张文琪大王获胜。";
   if (counts.white === counts.black) message += "平局。";
 
   renderBoard();
